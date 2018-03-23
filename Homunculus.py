@@ -7,6 +7,7 @@ import urllib.parse
 import re
 from discord.ext import commands
 import sqlite3
+import config
 # from googleapiclient.discovery import build
 # from googleapiclient.errors import HttpError
 # from apiclient.discovery import build
@@ -18,11 +19,6 @@ description = 'Homunculus Bot, advanced version'
 playlist = []
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description=description)
-youtube_api_key = 'AIzaSyAZ1AgebKW8w8Nzs__jMpqRBVmVH4jtWe8'
-youtube_client_id = '216353908791-qavvvln2vsv1ut1knpuiv0d1oqgd1ogf.apps.googleusercontent.com'
-youtube_client_secret = 'rk3CphP4BqL6fQVhYdaNvCjL'
-youtube_scopes = 'https://www.googleapis.com/auth/youtube.force-ssl'
-
 
 def youtube_search(query : str):
     # youtube = build('youtube', 'v3', developerKey=youtube_api_key)
@@ -34,7 +30,6 @@ def youtube_search(query : str):
     html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
     search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
     return search_results
-
 
 def rollNormalDice(diceNumber, diceSides, modifier):
     loopIterator = 0
@@ -49,7 +44,6 @@ def rollNormalDice(diceNumber, diceSides, modifier):
     rollList.append('__**Final Total: ' + str(total) + '**__')
     finalResult = (', '.join(rollList))
     return finalResult
-
 
 def rollFudgeDice(diceNumber, modifier):
     rollList = []
@@ -73,14 +67,12 @@ def rollFudgeDice(diceNumber, modifier):
     finalResult = (', '.join(result))
     return finalResult
 
-
 @bot.event
 async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
     print('--------------------------------------')
-
 
 @bot.command(pass_context = True)
 async def roll(ctx, dice: str):
@@ -123,7 +115,6 @@ async def addQuote(ctx):
     quotes.close()
     await bot.say("Quote added!")
 
-
 @bot.command()
 async def quote():
     quoteList = []
@@ -134,7 +125,6 @@ async def quote():
     await bot.say(random.choice(quoteList))
     quoteList.clear
 
-
 @bot.command(pass_context=True, no_pm=True)
 async def join(ctx):
     channel = ctx.message.author.voice_channel
@@ -144,7 +134,6 @@ async def join(ctx):
         global vc
         vc = await bot.join_voice_channel(channel)
 
-
 @bot.command(pass_context=True)
 async def disconnect(ctx):
     if bot.is_voice_connected(ctx.message.server):
@@ -152,25 +141,12 @@ async def disconnect(ctx):
     else:
         await bot.say("Not in a voice channel, and I wouldn't want to be in the same one as you turd")
 
-
-# @bot.command()
-# async def play(*, searchTerms : str):
-#
-#     results = youtube_search(searchTerms)
-#     resultstring = ''
-#     iterator = 1
-#
-#     player = await vc.create_ytdl_player(results)
-#     player.start()
-
-
 @bot.command(pass_context=True)
 async def airhorn(ctx):
     vc = await bot.join_voice_channel(ctx.message.author.voice_channel)
     player = await vc.create_ytdl_player('https://www.youtube.com/watch?v=2Tt04ZSlbZ0')
     player.start()
     #vc.disconnect()
-
 
 @bot.command(pass_context = True)
 async def test(ctx):
@@ -223,4 +199,4 @@ async def addChar(ctx):
     conn.commit()
     conn.close()
 
-bot.run('MzkzNDE5MzE2NTk2NDQxMDk2.DR3maw.LYHVZPWF1IbHDof0QNvh7kzv-J8')
+bot.run(config.token)
