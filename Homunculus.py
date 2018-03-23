@@ -1,12 +1,14 @@
 import discord
 import asyncio
 import random
+import os.path
 import urllib.request
 import urllib.parse
 import re
 from discord.ext import commands
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+import sqlite3
+# from googleapiclient.discovery import build
+# from googleapiclient.errors import HttpError
 # from apiclient.discovery import build
 # from apiclient.errors import HttpError
 #import google_auth_oauthlib.flow
@@ -33,7 +35,7 @@ def youtube_search(query : str):
     search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
     return search_results
 
-	
+
 def rollNormalDice(diceNumber, diceSides, modifier):
     loopIterator = 0
     rollList = []
@@ -80,9 +82,10 @@ async def on_ready():
     print('--------------------------------------')
 
 
-@bot.command()
-async def roll(dice: str):
+@bot.command(pass_context = True)
+async def roll(ctx, dice: str):
     # Rolls dice
+    ctx.message.delete_message()
     numberOfDice, sidesOfDice = dice.split('d')
     numberOfDice = numberOfDice.strip()
     sidesOfDice = sidesOfDice.strip()
@@ -200,4 +203,24 @@ async def fight():
     await bot.say('You are fighting a ' + gender + ' ' + magic + ', who has a power level (between 1 and 100) of ' +
                   str(powerLevel) + ' and on a scale of 1 to 100, is about ' + str(willingnessToFight)
                   + ' on their willingness to fight')
+
+@bot.command(pass_context = True)
+async def addChar(ctx):
+    # Adds a character associated with a user
+    # Syntax as follows:
+    #   !addChar <Player Name>, <Character Name>, <RANK (if not applicable, type NULL)>, <Magic Types>, <Subtype>
+    conn = sqlite3.connect('magicSchool.db')
+    connCursor = conn.cursor()
+    charInfo = ctx.mmessage.content[9:]
+    charInfo = charInfo.split(',')
+    cid = connCursor.execute("SELECT MAX(cid) FROM characters")
+    cid = cid + 1
+    connCursor.execute('INSERT INTO characters VALUES(?,?,?,?)', cid, charInfo.pop(), charInfo.pop(), charInfo.pop())
+    charMagicInfo = []
+    while not charInfo:
+        charMagicInfo.append(cid, charInfo.pop(), charInfo.pop())
+    connCursor.executemany('INSERT INTO magics VALUES(?,?,?)', charMagicInfo)
+    conn.commit()
+    conn.close()
+
 bot.run('MzkzNDE5MzE2NTk2NDQxMDk2.DR3maw.LYHVZPWF1IbHDof0QNvh7kzv-J8')
