@@ -74,10 +74,10 @@ async def on_ready():
     print(bot.user.id)
     print('--------------------------------------')
 
-@bot.command(pass_context = True)
-async def roll(ctx, dice: str):
+@bot.command()
+async def roll( dice: str):
     # Rolls dice
-    ctx.message.delete_message()
+    # ctx.message.delete_message()
     numberOfDice, sidesOfDice = dice.split('d')
     numberOfDice = numberOfDice.strip()
     sidesOfDice = sidesOfDice.strip()
@@ -187,16 +187,32 @@ async def addChar(ctx):
     #   !addChar <Player Name>, <Character Name>, <RANK (if not applicable, type NULL)>, <Magic Types>, <Subtype>
     conn = sqlite3.connect('magicSchool.db')
     connCursor = conn.cursor()
-    charInfo = ctx.mmessage.content[9:]
+    charInfo = ctx.message.content[9:]
     charInfo = charInfo.split(',')
-    cid = connCursor.execute("SELECT MAX(cid) FROM characters")
-    cid = cid + 1
-    connCursor.execute('INSERT INTO characters VALUES(?,?,?,?)', cid, charInfo.pop(), charInfo.pop(), charInfo.pop())
+    charInfo.reverse()
+    # cid = connCursor.execute("SELECT MAX(cid) FROM characters")
+    connCursor.execute("SELECT MAX(cid) FROM characters")
+    cid = connCursor.fetchone()
+    intcid = int(max(cid)) + 1
+    playerName = charInfo.pop()
+    charName = charInfo.pop()
+    rank = charInfo.pop()
+    initialInfo = (intcid, playerName, charName, rank)
+    connCursor.execute('INSERT INTO characters VALUES(?,?,?,?)', initialInfo)
     charMagicInfo = []
     while not charInfo:
-        charMagicInfo.append(cid, charInfo.pop(), charInfo.pop())
+        charMagicInfo.append(intcid, charInfo.pop(), charInfo.pop())
     connCursor.executemany('INSERT INTO magics VALUES(?,?,?)', charMagicInfo)
     conn.commit()
     conn.close()
+
+@bot.command()
+async def showChar(charName : str):
+    charNameList = (charName,)
+    conn = sqlite3.connect('magicSchool.db')
+    connCursor = conn.cursor()
+    connCursor.execute("SELECT * FROM characters WHERE  name = ?", charNameList)
+    characterInfo = connCursor.fetchall()
+    await bot.say(characterInfo)
 
 bot.run(config.token)
