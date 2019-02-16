@@ -216,28 +216,37 @@ async def showChar(charName : str):
     characterInfo = connCursor.fetchall()
     await bot.say(characterInfo)
 
-@bot.listen()
-async def on_message(message):
-    if ((message.content.startswith('\"') and message.content.endswith('\"')) or
-    (message.content.startswith('“') and message.content.endswith('”')) or
-    (message.content.startswith('**\"') and message.content.endswith('\"**')) or
-    (message.content.startswith('***\"') and message.content.endswith('\"***')) or
-    (message.content.startswith('_“') and message.content.endswith('”_')) or
-    (message.content.startswith('*“') and message.content.endswith('”*')) or
-    (message.content.startswith('***“') and message.content.endswith('”***')) or
-    (message.content.startswith('**“') and message.content.endswith('”**')) or
-    (message.content.startswith('_\"') and message.content.endswith('\"_')) or
-    (message.content.startswith('*\"') and message.content.endswith('\"*')) or
-    (message.content.startswith('**\"') and message.content.endswith('\"**')) or
-    (message.content.startswith('***\"') and message.content.endswith('\"***')) or
-    (message.content.startswith('_“') and message.content.endswith('”_')) or
-    (message.content.startswith('*“') and message.content.endswith('”*')) or
-    (message.content.startswith('***“') and message.content.endswith('”***')) or
-    (message.content.startswith('**“') and message.content.endswith('”**')) or
-    (message.content.startswith('\\\"'))):
-        await bot.delete_message(message)
-        channel = message.channel
-        await bot.say(channel,"Go fuck yourself.")
+# @bot.listen()
+#async def on_message(message):
+#    if ((message.content.startswith('\"') and message.content.endswith('\"')) or
+#    (message.content.startswith('“') and message.content.endswith('”')) or
+#    (message.content.startswith('**\"') and message.content.endswith('\"**')) or
+#    (message.content.startswith('***\"') and message.content.endswith('\"***')) or
+#    (message.content.startswith('_“') and message.content.endswith('”_')) or
+#    (message.content.startswith('*“') and message.content.endswith('”*')) or
+#    (message.content.startswith('***“') and message.content.endswith('”***')) or
+#    (message.content.startswith('**“') and message.content.endswith('”**')) or
+#    (message.content.startswith('_\"') and message.content.endswith('\"_')) or
+#    (message.content.startswith('*\"') and message.content.endswith('\"*')) or
+#    (message.content.startswith('**\"') and message.content.endswith('\"**')) or
+#    (message.content.startswith('***\"') and message.content.endswith('\"***')) or
+#   (message.content.startswith('_“') and message.content.endswith('”_')) or
+#   (message.content.startswith('*“') and message.content.endswith('”*')) or
+#   (message.content.startswith('***“') and message.content.endswith('”***')) or
+#   (message.content.startswith('**“') and message.content.endswith('”**')) or
+#   (message.content.startswith('\\\"'))):
+#       await bot.delete_message(message)
+#       channel = message.channel
+#       await bot.say(channel,"Go fuck yourself.")
 
+@bot.command()
+async def addRole(message):
+    roles = message.role_mentions
+    users = message.mentions
+    for role in roles:
+        for user in users:
+            bot.add_roles(user, role)
+
+    
 
 bot.run(config.token)
