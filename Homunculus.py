@@ -23,40 +23,7 @@ playlist = []
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description=description)
 
-#def youtube_search(query : str):
-    # youtube = build('youtube', 'v3', developerKey=youtube_api_key)
-    # #response = youtube.search().list('snippet', '5', query, 'video').execute()
-    # #return response
-    # response = youtube.search(query)
-    # return response
-#    query_string = urllib.parse.urlencode({"search_query" : query})
-#    html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
-#    search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
-#    return search_results
-"""
-def rollFudgeDice(diceNumber, modifier):
-    rollList = []
-    result = []
-    #loopIterator = 0
-    while diceNumber > loopIterator:
-        rollList.append(random.randint(1, 4))
-        loopIterator += 1
-    while rollList:
-        roll = rollList.pop()
-        if roll == 1:
-            result.append('-')
-        elif roll == 2:
-            result.append('0')
-        else:
-            result.append('+')
-    positives = rollList.count('+')
-    negatives = rollList.count('-')
-    total = positives - negatives + modifier
-    result.append('__**Total: ' + str(total) + '**__')
-    finalResult = (', '.join(result))
-    return finalResult 
 
-"""
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -64,36 +31,11 @@ async def on_ready():
     print(bot.user.id)
     print('--------------------------------------')
 
-@bot.command()
-async def roll( dice : str):
-    # Rolls dice
-    # ctx.message.delete_message()
-"""    numberOfDice, sidesOfDice = dice.split('d')
-    numberOfDice = numberOfDice.strip()
-    sidesOfDice = sidesOfDice.strip()
-    if 'f' in sidesOfDice:
-        if '+' in sidesOfDice:
-            sidesOfDice, modifier = sidesOfDice.split('+')
-            intModifier = int(modifier)
-            await bot.say(rollFudgeDice(int(numberOfDice), intModifier))
-        elif '-' in sidesOfDice:
-            sidesOfDice, modifier = sidesOfDice.split('-')
-            intModifier = int(modifier) - (int(modifier) * 2)
-            await bot.say(rollFudgeDice(int(numberOfDice), intModifier))
-        else:
-            await bot.say(rollFudgeDice(int(numberOfDice), 0))
-    else:
-        if '+' in sidesOfDice:
-            sidesOfDice, modifier = sidesOfDice.split('+')
-            intModifier = int(modifier)
-            await bot.say(rollNormalDice(int(numberOfDice), int(sidesOfDice), intModifier))
-        elif '-' in sidesOfDice:
-            sidesOfDice, modifier = sidesOfDice.split('-')
-            intModifier = int(modifier) - (int(modifier) * 2)
-            await bot.say(rollNormalDice(int(numberOfDice), int(sidesOfDice), intModifier))
-        else:
-            await bot.say(rollNormalDice(int(numberOfDice), int(sidesOfDice), 0))
-"""
+@bot.command(pass_context = True)
+async def roll(ctx):
+    output = dice.in_string(ctx.message.content[8:])
+    await bot.say(output)
+
 @bot.command(pass_context = True)
 async def addQuote(ctx):
     quotes = open('quotes.txt', 'r')
@@ -204,30 +146,6 @@ async def showChar(charName : str):
     connCursor.execute("SELECT * FROM characters WHERE  name = ?", charNameList)
     characterInfo = connCursor.fetchall()
     await bot.say(characterInfo)
-
-# @bot.listen()
-#async def on_message(message):
-#    if ((message.content.startswith('\"') and message.content.endswith('\"')) or
-#    (message.content.startswith('“') and message.content.endswith('”')) or
-#    (message.content.startswith('**\"') and message.content.endswith('\"**')) or
-#    (message.content.startswith('***\"') and message.content.endswith('\"***')) or
-#    (message.content.startswith('_“') and message.content.endswith('”_')) or
-#    (message.content.startswith('*“') and message.content.endswith('”*')) or
-#    (message.content.startswith('***“') and message.content.endswith('”***')) or
-#    (message.content.startswith('**“') and message.content.endswith('”**')) or
-#    (message.content.startswith('_\"') and message.content.endswith('\"_')) or
-#    (message.content.startswith('*\"') and message.content.endswith('\"*')) or
-#    (message.content.startswith('**\"') and message.content.endswith('\"**')) or
-#    (message.content.startswith('***\"') and message.content.endswith('\"***')) or
-#   (message.content.startswith('_“') and message.content.endswith('”_')) or
-#   (message.content.startswith('*“') and message.content.endswith('”*')) or
-#   (message.content.startswith('***“') and message.content.endswith('”***')) or
-#   (message.content.startswith('**“') and message.content.endswith('”**')) or
-#   (message.content.startswith('\\\"'))):
-#       await bot.delete_message(message)
-#       channel = message.channel
-#       await bot.say(channel,"Go fuck yourself.")
-
 
 @bot.command(pass_context=True)
 @has_permissions(manage_roles=True)
