@@ -33,21 +33,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description=d
 #    html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
 #    search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
 #    return search_results
-
-def rollNormalDice(diceNumber, diceSides, modifier):
-    loopIterator = 0
-    rollList = []
-    total = 0
-    while (diceNumber > loopIterator):
-        roll = random.randint(1, diceSides)
-        total += roll
-        rollList.append(str(roll))
-        loopIterator = loopIterator + 1
-    total += modifier
-    rollList.append('__**Final Total: ' + str(total) + '**__')
-    finalResult = (', '.join(rollList))
-    return finalResult
-
+"""
 def rollFudgeDice(diceNumber, modifier):
     rollList = []
     result = []
@@ -68,8 +54,9 @@ def rollFudgeDice(diceNumber, modifier):
     total = positives - negatives + modifier
     result.append('__**Total: ' + str(total) + '**__')
     finalResult = (', '.join(result))
-    return finalResult
+    return finalResult 
 
+"""
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -81,7 +68,7 @@ async def on_ready():
 async def roll( dice : str):
     # Rolls dice
     # ctx.message.delete_message()
-    numberOfDice, sidesOfDice = dice.split('d')
+"""    numberOfDice, sidesOfDice = dice.split('d')
     numberOfDice = numberOfDice.strip()
     sidesOfDice = sidesOfDice.strip()
     if 'f' in sidesOfDice:
@@ -106,7 +93,7 @@ async def roll( dice : str):
             await bot.say(rollNormalDice(int(numberOfDice), int(sidesOfDice), intModifier))
         else:
             await bot.say(rollNormalDice(int(numberOfDice), int(sidesOfDice), 0))
-
+"""
 @bot.command(pass_context = True)
 async def addQuote(ctx):
     quotes = open('quotes.txt', 'r')

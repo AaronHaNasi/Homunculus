@@ -43,7 +43,12 @@ class dice:
             sideStr, modifierStr = sideStr.split('-')
         sideStr = sideStr.strip()
         sides = int(sideStr)
-
+        if shadowRunStyle:
+            rollShadowRunDice()
+        elif fudgeDice:
+            rollFudgeDice()
+        else:
+            rollDice() 
         return toString
     def roll(self): 
         rollResult = random.randInt(1, sides) 
@@ -87,4 +92,5 @@ class dice:
                 if rollTemp == 5 or rollTemp == 6:
                     hits +=1
                 rollList.append(str(rollTemp)) 
-
+        rollList.append('_**Total Hits: ' + str(hits) + '**_')
+        toString = (', '.join(rollList)) 
