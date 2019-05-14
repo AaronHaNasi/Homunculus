@@ -5,7 +5,9 @@ import os.path
 import urllib.request
 import urllib.parse
 import re
+from discord import Member
 from discord.ext import commands
+from discord.ext.commands import has_permissions #, MissingPermissions
 import sqlite3
 import config
 
@@ -21,16 +23,16 @@ playlist = []
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description=description)
 
-def youtube_search(query : str):
+#def youtube_search(query : str):
     # youtube = build('youtube', 'v3', developerKey=youtube_api_key)
     # #response = youtube.search().list('snippet', '5', query, 'video').execute()
     # #return response
     # response = youtube.search(query)
     # return response
-    query_string = urllib.parse.urlencode({"search_query" : query})
-    html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
-    search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
-    return search_results
+#    query_string = urllib.parse.urlencode({"search_query" : query})
+#    html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
+#    search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
+#    return search_results
 
 def rollNormalDice(diceNumber, diceSides, modifier):
     loopIterator = 0
@@ -76,7 +78,7 @@ async def on_ready():
     print('--------------------------------------')
 
 @bot.command()
-async def roll( dice: str):
+async def roll( dice : str):
     # Rolls dice
     # ctx.message.delete_message()
     numberOfDice, sidesOfDice = dice.split('d')
@@ -239,13 +241,26 @@ async def showChar(charName : str):
 #       channel = message.channel
 #       await bot.say(channel,"Go fuck yourself.")
 
-@bot.command()
-async def addRole(message):
-    roles = message.role_mentions
-    users = message.mentions
+
+@bot.command(pass_context=True)
+@has_permissions(manage_roles=True)
+async def addRole(ctx):
+    roles = []
+    users = []
+    #strMessage = ctx.message.content
+    #roles = strMessage.split()
+    #[x for x in roles if not '@' or '!' in x]    
+     
+    #roles = ctx.message.
+    roles = ctx.message.role_mentions
+    users = ctx.message.mentions
+    print(roles)
+    print(users)
     for role in roles:
+        print("adding role...")
         for user in users:
-            bot.add_roles(user, role)
+            await bot.add_roles(user, role)
+            #print("role added to " + user)
 
     
 
