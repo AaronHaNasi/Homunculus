@@ -39,7 +39,24 @@ class dice:
         return self.toString
     def rollFudgeDice(self):
         # function to roll fudge dice
-        return 0 
+        rollList = []
+        loopIterator = 0
+        total = 0
+        while self.numberOfDice > loopIterator:
+            rollTemp = self.roll()
+            if rollTemp is 1:
+                rollList.append('+')
+                total += 1
+            elif rollTemp is 2: 
+                rollList.append('-')
+                total -= 1
+            elif rollTemp is 3: 
+                rollList.append('B')
+            loopIterator += 1
+        rollList.append('_**Final Total: ' + str(total) +'**_')
+        self.toString = (', '.join(rollList))
+        return 
+            
     def rollShadowRunDice(self): # function to roll shadowrun dice and count 'hits'
         if self.sides is not 6:
             self.toString = 'Shadowrun uses d6s only.'
@@ -60,12 +77,13 @@ class dice:
             loopIterator += 1 
         rollList.append('_**Total Hits: ' + str(hits) + '**_')
         self.toString = (', '.join(rollList))
-        return self.toString
+        return # self.toString
 
 
     def in_string(self, inpt : str):
         # takes in string from discord command !rollDice
         # initialize temporary variables
+        inpt = inpt.lower() 
         numberOfDiceStr = ' '
         sidesStr = ' '
         modifierStr = ' '
@@ -89,10 +107,17 @@ class dice:
                     inpt.replace('es','')
         if inpt.find('d') is not -1:
             numberOfDiceStr, sidesStr = inpt.split('d')
-        elif inpt.find('D') is not -1:
-            numberOfDiceStr, sidesStr = inpt.split('D')
+        else:
+            self.toString = 'Please input your dice roll as \'<x>d<y>\', where <x> and <y> are integers. <y> may also be \'f\' to roll fudge dice.'
+            return 
         numberOfDiceStr = numberOfDiceStr.strip() # remove white space if numberOfDiceStr is 'f' or numberOfDiceStr is 'F':
-        self.numberOfDice = int(numberOfDiceStr) # convert to int 
+        if len(numberOfDiceStr) is 0:
+            self.numberOfDice = 1
+        elif numberOfDiceStr.isdigit(): 
+            self.numberOfDice = int(numberOfDiceStr) # convert to int 
+        else: 
+            self.toString = 'Please input your dice roll as \'<x>d<y>\', where <x> and <y> are integers. <y> may also be \'f\' to roll fudge dice.'
+            return
         if sidesStr.find('+') is not -1: # check to see if there is a positive modifier
             sidesStr, modifierStr = sidesStr.split('+') #
             modifierStr = modifierStr.strip()
@@ -100,11 +125,15 @@ class dice:
         elif sidesStr.find('-') is not -1: # check to see if there is a negative modifier 
             sidesStr, modifierStr = sidesStr.split('-')
         sidesStr = sidesStr.strip()
-        self.sides = int(sidesStr)
+        if sidesStr is 'f' or sidesStr is 'F':
+            self.fudgeDice = True
+            self.sides = 3
+        else:
+            self.sides = int(sidesStr)
         if self.shadowRunStyle:
             self.rollShadowRunDice()
-        # elif fudgeDice:
-        #     rollFudgeDice()
+        elif self.fudgeDice:
+             self.rollFudgeDice()
         else:
             self.toString = self.rollDice() 
         print(self.toString)
