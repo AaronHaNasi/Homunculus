@@ -10,7 +10,7 @@ from discord.ext import commands
 from discord.ext.commands import has_permissions #, MissingPermissions
 import sqlite3
 import config
-
+import dice
 # from googleapiclient.discovery import build
 # from googleapiclient.errors import HttpError
 # from apiclient.discovery import build
@@ -33,7 +33,9 @@ async def on_ready():
 
 @bot.command(pass_context = True)
 async def roll(ctx):
-    output = dice.in_string(ctx.message.content[8:])
+    output = dice.in_string(ctx.message.content[6:])
+    # inpt = ctx.message.content[8:]
+    # inpt.find
     await bot.say(output)
 
 @bot.command(pass_context = True)
