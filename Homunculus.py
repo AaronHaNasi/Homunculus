@@ -1,22 +1,11 @@
 import discord
 import asyncio
-import random
-import os.path
-import urllib.request
-import urllib.parse
-import re
 from discord import Member
 from discord.ext import commands
 from discord.ext.commands import has_permissions #, MissingPermissions
 import sqlite3
 import config
 import dice
-# from googleapiclient.discovery import build
-# from googleapiclient.errors import HttpError
-# from apiclient.discovery import build
-# from apiclient.errors import HttpError
-#import google_auth_oauthlib.flow
-#import simplejson
 
 description = 'Homunculus Bot, advanced version'
 playlist = []
@@ -33,10 +22,8 @@ async def on_ready():
 
 @bot.command(pass_context = True)
 async def roll(ctx):
-    output = dice.in_string(ctx.message.content[6:])
-    # inpt = ctx.message.content[8:]
-    # inpt.find
-    await bot.say(output)
+    output = dice.dice(ctx.message.content[6:])
+    await ctx.message.channel.send(output)
 
 @bot.command(pass_context = True)
 async def addQuote(ctx):
