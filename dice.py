@@ -28,6 +28,7 @@ class dice:
             rollTemp = self.roll()
             total += rollTemp
             rollList.append(str(rollTemp))
+            loopIterator += 1
             while rollTemp == self.sides and self.explodingDice:
                 rollTemp = self.roll()
                 total += rollTemp
@@ -40,19 +41,23 @@ class dice:
         # function to roll fudge dice
         return 0 
     def rollShadowRunDice(self): # function to roll shadowrun dice and count 'hits'
+        if self.sides is not 6:
+            self.toString = 'Shadowrun uses d6s only.'
+            return 
         hits = 0
         rollList = []
         loopIterator = 0
-        while numberOfDice > loopIterator: 
-            rollTemp = roll()
+        while self.numberOfDice > loopIterator: 
+            rollTemp = self.roll()
             if rollTemp == 5 or rollTemp == 6:
                 hits += 1
             rollList.append(str(rollTemp))
-            while explodingDice and rollTemp == 6:
-                rollTemp = roll()
+            while self.explodingDice and rollTemp == 6:
+                rollTemp = self.roll()
                 if rollTemp == 5 or rollTemp == 6:
                     hits +=1
                 rollList.append(str(rollTemp)) 
+            loopIterator += 1 
         rollList.append('_**Total Hits: ' + str(hits) + '**_')
         self.toString = (', '.join(rollList))
         return self.toString
@@ -65,10 +70,10 @@ class dice:
         sidesStr = ' '
         modifierStr = ' '
         if inpt.find('-e') is not -1: # discover if person wants exploding dice
-            self.explodingDie = True 
+            self.explodingDice = True
             inpt.replace('-e', '') # remove from string
         else:
-            self.explodingDie = False
+            self.explodingDice = False
         if inpt.find('-s') is not -1: # discover if person wants to count 'hits' 
             self.shadowRunStyle = True 
             inpt.replace('-s','') # remove from string
@@ -77,7 +82,7 @@ class dice:
         if inpt.find('-se') is not -1 or inpt.find('-es') is not -1:
                 # discover if person wants to use both shadowrun style and exploding dice (both are commonly used in shadowrun) 
                 self.shadowrunStyle = True
-                self.explodingDie = True 
+                self.explodingDice = True
                 if inpt.find('-se') is not -1:
                     inpt.replace('-se', '')
                 if inpt.find('-es') is not -1:
@@ -97,12 +102,14 @@ class dice:
         sidesStr = sidesStr.strip()
         self.sides = int(sidesStr)
         if self.shadowRunStyle:
-            rollShadowRunDice()
+            self.rollShadowRunDice()
         # elif fudgeDice:
         #     rollFudgeDice()
         else:
-            self.rollDice() 
-        return toString
+            self.toString = self.rollDice() 
+        print(self.toString)
+        return self.toString
         
     def __init__(self, inpt : str):
          self.in_string(inpt)
+         # return output

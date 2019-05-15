@@ -20,10 +20,19 @@ async def on_ready():
     print(bot.user.id)
     print('--------------------------------------')
 
+# @bot.command()
+# async def help():
+#     await bot.say('Hi! I am Homunculus! I have a couple of commands, all of which'
+#     + 'are activated by the \'!\' prefix. Here is a list:' 
+#             + '\n**help**: Gives information on commands'
+#             + '\n**roll**: Rolls dice with a variety of options. Append -e for'
+#             + 'exploding dice, -s for shadowrun style dice, and -se for both. I can also roll fudge dice!'
+#             + '\n**join**: joins the voice chat you are currently for music playing purposes.')
+
 @bot.command(pass_context = True)
 async def roll(ctx):
-    output = dice.dice(ctx.message.content[6:])
-    await ctx.message.channel.send(output)
+    rolls = dice.dice(ctx.message.content[6:])
+    await ctx.message.channel.send(rolls.toString)
 
 @bot.command(pass_context = True)
 async def addQuote(ctx):
