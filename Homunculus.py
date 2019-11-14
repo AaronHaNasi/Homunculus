@@ -6,6 +6,7 @@ from discord.ext.commands import has_permissions #, MissingPermissions
 import sqlite3
 import config
 import dice
+import hat
 
 description = 'Homunculus Bot, advanced version'
 playlist = []
@@ -38,6 +39,7 @@ async def roll(ctx):
 async def addQuote(ctx):
     quotes = open('quotes.txt', 'r')
     currentQuotes = quotes.read()
+    currentQuotes.close()
     quotes = open('quotes.txt', 'w')
     quote = ctx.message.content[10:]
     quotes.write(currentQuotes + '\n' + quote)
@@ -110,40 +112,20 @@ async def fight():
                   str(powerLevel) + ' and on a scale of 1 to 100, is about ' + str(willingnessToFight)
                   + ' on their willingness to fight')
 
-@bot.command(pass_context = True)
-async def addChar(ctx):
-    # Adds a character associated with a user
-    # Syntax as follows:
-    #   !addChar <Player Name>, <Character Name>, <RANK (if not applicable, type NULL)>, <Magic Types>, <Subtype>
-    conn = sqlite3.connect('magicSchool.db')
-    connCursor = conn.cursor()
-    charInfo = ctx.message.content[9:]
-    charInfo = charInfo.split(',')
-    charInfo.reverse()
-    # cid = connCursor.execute("SELECT MAX(cid) FROM characters")
-    connCursor.execute("SELECT MAX(cid) FROM characters")
-    cid = connCursor.fetchone()
-    intcid = int(max(cid)) + 1
-    playerName = charInfo.pop()
-    charName = charInfo.pop()
-    rank = charInfo.pop()
-    initialInfo = (intcid, playerName, charName, rank)
-    connCursor.execute('INSERT INTO characters VALUES(?,?,?,?)', initialInfo)
-    charMagicInfo = []
-    while not charInfo:
-        charMagicInfo.append(intcid, charInfo.pop(), charInfo.pop())
-    connCursor.executemany('INSERT INTO magics VALUES(?,?,?)', charMagicInfo)
-    conn.commit()
-    conn.close()
+
+
+@bot.command(pass_context=True)
+async def addToHat(ctx):
+    hat.addItem(ctx.message.content[8:)
+    await bot.say("Item added!")
+    
+
+
+@bot.command(pass_context=True)
+async def removeFromHat(ctx):
 
 @bot.command()
-async def showChar(charName : str):
-    charNameList = (charName,)
-    conn = sqlite3.connect('magicSchool.db')
-    connCursor = conn.cursor()
-    connCursor.execute("SELECT * FROM characters WHERE  name = ?", charNameList)
-    characterInfo = connCursor.fetchall()
-    await bot.say(characterInfo)
+async def pullFromHat(): 
 
 @bot.command(pass_context=True)
 @has_permissions(manage_roles=True)
