@@ -116,16 +116,20 @@ async def fight():
 
 @bot.command(pass_context=True)
 async def addToHat(ctx):
-    hat.addItem(ctx.message.content[8:)
+    hat.addItem(ctx.message.content[8:])
     await bot.say("Item added!")
     
 
 
 @bot.command(pass_context=True)
 async def removeFromHat(ctx):
+    response = hat.removeItem(ctx.message.content[13:])
+    await bot.say(response)
 
 @bot.command()
 async def pullFromHat(): 
+    response = hat.pullItem()
+    await bot.say(response)
 
 @bot.command(pass_context=True)
 @has_permissions(manage_roles=True)

@@ -29,6 +29,10 @@ class hat:
         for item in hatItems:
             if item == itemToRemove:
                 hatItems.remove(item)
+                hatFile = open('hat.txt', 'w')
+                for item in hatItems:
+                    hatFile.write('\n' + item)
+                hatFile.close() 
                 return "Found item! Removed!"
             else:
                 return "Could not find in hat."
