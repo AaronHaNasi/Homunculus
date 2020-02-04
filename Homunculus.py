@@ -28,6 +28,7 @@ async def on_ready():
     print(bot.user.id)
     print('--------------------------------------')
 
+'''
 @bot.command(pass_context = True)
 async def Help(ctx, arg1):
     if ctx.message.content == '!help':
@@ -41,11 +42,13 @@ async def Help(ctx, arg1):
             + '\n For more information about these commands, type !help [name of command]')
     else:
         ctx.message.channel.send(helpdict[arg1])
-
+'''
 @bot.command(pass_context = True, description='Roll x number of dice with y faces, using the \'X\'d\'Y\' format')
-async def roll(ctx):
-    rolls = dice.dice(ctx.message.content[6:])
-    await ctx.message.channel.send(rolls.toString)
+async def roll(ctx, arg):
+    # rolls = dice.dice(ctx.message.content[6:])
+    # await ctx.message.channel.send(rolls.toString)
+    rolls = dice.dice(arg)
+    await ctx.send(rolls.toString)
 
 '''@bot.command(pass_context = True)
 async def addQuote(ctx):
@@ -168,7 +171,7 @@ async def addRole(ctx):
             await bot.add_roles(user, role)
             #print("role added to " + user)
 '''
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, description='Function that rolls multiple weeks of actions in Magic School Roleplaying Game')
 async def rollWeeks(ctx):
     # needs to pass 5 parameters:
     # number of weeks, 
@@ -182,6 +185,7 @@ async def rollWeeks(ctx):
 @bot.command()
 async def rollStats():
     # rolls 4d6, dropping the lowest number, six times to allow for D&D 5e character creation
-    
+    # TODO 
+    pass
 
 bot.run(config.token)

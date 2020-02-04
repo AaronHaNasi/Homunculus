@@ -136,7 +136,6 @@ class dice:
              self.rollFudgeDice()
         else:
             self.toString = self.rollDice() 
-        print(self.toString)
         return self.toString
         
     def __init__(self, inpt : str):
