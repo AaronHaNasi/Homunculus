@@ -7,7 +7,8 @@ import sqlite3
 import config
 import dice
 import hat
-
+## TODO: Replace all appearances of ctx.messagen.contents
+## TODO: replace appearances of ctx.message.channel.send 
 description = 'Homunculus Bot, advanced version'
 playlist = []
 
@@ -41,12 +42,12 @@ async def Help(ctx, arg1):
     else:
         ctx.message.channel.send(helpdict[arg1])
 
-@bot.command(pass_context = True)
+@bot.command(pass_context = True, description='Roll x number of dice with y faces, using the \'X\'d\'Y\' format')
 async def roll(ctx):
     rolls = dice.dice(ctx.message.content[6:])
     await ctx.message.channel.send(rolls.toString)
 
-@bot.command(pass_context = True)
+'''@bot.command(pass_context = True)
 async def addQuote(ctx):
     quotes = open('quotes.txt', 'r')
     currentQuotes = quotes.read()
@@ -58,6 +59,7 @@ async def addQuote(ctx):
     quotes.close()
     await bot.say("Quote added!")
 
+
 @bot.command()
 async def quote():
     quoteList = []
@@ -67,8 +69,8 @@ async def quote():
     quotes.close()
     await bot.say(random.choice(quoteList))
     quoteList.clear
-
-@bot.command(pass_context=True, no_pm=True)
+'''
+@bot.command(pass_context=True, no_pm=True, description='Joins user in current voice chat channel')
 async def join(ctx):
     channel = ctx.message.author.voice_channel
     if channel is None:
@@ -77,26 +79,28 @@ async def join(ctx):
         global vc
         vc = await bot.join_voice_channel(channel)
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, description='Leaves current voice channel. Must be in a voice chat')
 async def disconnect(ctx):
     if bot.is_voice_connected(ctx.message.server):
         await vc.disconnect()
     else:
         await bot.say("Not in a voice channel, and I wouldn't want to be in the same one as you turd")
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, description='Try it while in a voice chat channel :)')
 async def airhorn(ctx):
     vc = await bot.join_voice_channel(ctx.message.author.voice_channel)
     player = await vc.create_ytdl_player('https://www.youtube.com/watch?v=2Tt04ZSlbZ0')
     player.start()
     #vc.disconnect()
 
-@bot.command(pass_context = True)
+'''@bot.command(pass_context = True)
 async def test(ctx):
     print(ctx.message.content)
+'''
 
 @bot.command()
 async def createPlayList(message : str):
+    # TODO fix
     global player
     player = await vc.create_ytdl_player('https://www.youtube.com/watch?v=lMAxL7ef_A8')
     player.start()
@@ -104,6 +108,7 @@ async def createPlayList(message : str):
 
 @bot.command()
 async def play(message : str):
+    # TODO fix
     if player.is_live:
         playlist.append(message)
     else:
@@ -111,7 +116,7 @@ async def play(message : str):
         #player(message)
         player.start()
 
-@bot.command()
+@bot.command(description='Creates a randomized fighter for arena fights in Magic School roleplaying game')
 async def fight():
     genders = ('male', 'female')
     magics = ('aeromancer', 'geomancer', 'hydromancer', 'shaman', 'summoner')
@@ -131,7 +136,7 @@ async def addToHat(ctx):
     await bot.say("Item added!")
     
 
-
+'''
 @bot.command(pass_context=True)
 async def removeFromHat(ctx):
     response = hat.removeItem(ctx.message.content[13:])
@@ -141,7 +146,8 @@ async def removeFromHat(ctx):
 async def pullFromHat(): 
     response = hat.pullItem()
     await bot.say(response)
-
+'''
+'''
 @bot.command(pass_context=True)
 @has_permissions(manage_roles=True)
 async def addRole(ctx):
@@ -161,7 +167,7 @@ async def addRole(ctx):
         for user in users:
             await bot.add_roles(user, role)
             #print("role added to " + user)
-
+'''
 @bot.command(pass_context=True)
 async def rollWeeks(ctx):
     # needs to pass 5 parameters:
@@ -171,6 +177,11 @@ async def rollWeeks(ctx):
     # number of actions on weekend,
     # and then the modifier 
     inputString = ctx.message.content[10:]
+    ## TODO
+
+@bot.command()
+async def rollStats():
+    # rolls 4d6, dropping the lowest number, six times to allow for D&D 5e character creation
     
 
 bot.run(config.token)
