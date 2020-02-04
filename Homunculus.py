@@ -13,6 +13,12 @@ playlist = []
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description=description)
 
+helpdict = {
+        'roll' : 'Rolls dice with a variety of options. The format is \'!roll [x]d[y]+[modifier], x being the number of dice to roll, and y being the number of sides on the dice. Append -e for exploding dice, -s for shadowrun style dice, and -se for both. Roll fudge dice by typing in [x]df, x being the number of dice.',
+        'help' : 'Good God it is a help command. If you need help using it I have no hope for you.',
+        'fight' : 'Creates a random arena fight for magic school.',
+        'rollWeeks' : 'Rolls weeks for magic school. Input data in this order: \n [Number of weeks to roll for] \n [Number of days  in a week (exclude weekend)] \n [Number of actions in a weekday] \n [Number of days on the weekend] \n [number of actions on weekend] \n [total modifier to roll with]' 
+        } 
 
 @bot.event
 async def on_ready():
@@ -21,14 +27,19 @@ async def on_ready():
     print(bot.user.id)
     print('--------------------------------------')
 
-# @bot.command()
-# async def help():
-#     await bot.say('Hi! I am Homunculus! I have a couple of commands, all of which'
-#     + 'are activated by the \'!\' prefix. Here is a list:' 
-#             + '\n**help**: Gives information on commands'
-#             + '\n**roll**: Rolls dice with a variety of options. Append -e for'
-#             + 'exploding dice, -s for shadowrun style dice, and -se for both. I can also roll fudge dice!'
-#             + '\n**join**: joins the voice chat you are currently for music playing purposes.')
+@bot.command(pass_context = True)
+async def Help(ctx, arg1):
+    if ctx.message.content == '!help':
+        ctx.message.channel.send('Hi! I am Homunculus! I have a couple of commands, all of which'
+            + 'are activated by the \'!\' prefix. Here is a list:' 
+            + '\n**help**: Gives information on commands'
+            + '\n**roll**: Rolls dice with a variety of options. Append -e for'
+            + 'exploding dice, -s for shadowrun style dice, and -se for both. I can also roll fudge dice!'
+            + '\n**join**: joins the voice chat you are currently for music playing purposes.'
+            + '\n**rollWeeks**: Automaticall roll magic school weeks.'
+            + '\n For more information about these commands, type !help [name of command]')
+    else:
+        ctx.message.channel.send(helpdict[arg1])
 
 @bot.command(pass_context = True)
 async def roll(ctx):
@@ -151,6 +162,15 @@ async def addRole(ctx):
             await bot.add_roles(user, role)
             #print("role added to " + user)
 
+@bot.command(pass_context=True)
+async def rollWeeks(ctx):
+    # needs to pass 5 parameters:
+    # number of weeks, 
+    # actions during a normal day,
+    # number of weekend days,
+    # number of actions on weekend,
+    # and then the modifier 
+    inputString = ctx.message.content[10:]
     
 
 bot.run(config.token)
