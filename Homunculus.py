@@ -1,5 +1,6 @@
 import discord
 import asyncio
+import random
 from discord import Member
 from discord.ext import commands
 from discord.ext.commands import has_permissions #, MissingPermissions
@@ -77,7 +78,7 @@ async def quote():
 async def join(ctx):
     channel = ctx.message.author.voice_channel
     if channel is None:
-        await bot.say('Join a channel first dingus')
+        await bot.send('Join a channel first dingus')
     else:
         global vc
         vc = await bot.join_voice_channel(channel)
@@ -127,17 +128,17 @@ async def fight():
     magic = random.choice(magics)
     powerLevel = random.randint(1, 100)
     willingnessToFight = random.randint(1, 100)
-    await bot.say('You are fighting a ' + gender + ' ' + magic + ', who has a power level (between 1 and 100) of ' +
+    await ctx.send('You are fighting a ' + gender + ' ' + magic + ', who has a power level (between 1 and 100) of ' +
                   str(powerLevel) + ' and on a scale of 1 to 100, is about ' + str(willingnessToFight)
                   + ' on their willingness to fight')
 
 
 
-@bot.command(pass_context=True)
+'''@bot.command(pass_context=True)
 async def addToHat(ctx):
     hat.addItem(ctx.message.content[8:])
     await bot.say("Item added!")
-    
+'''    
 
 '''
 @bot.command(pass_context=True)
@@ -172,20 +173,35 @@ async def addRole(ctx):
             #print("role added to " + user)
 '''
 @bot.command(pass_context=True, description='Function that rolls multiple weeks of actions in Magic School Roleplaying Game')
-async def rollWeeks(ctx):
-    # needs to pass 5 parameters:
+async def rollWeeks(ctx, numberOfWeeks, normalDays, normalDayActions, numberOfWeekendDays, weekendActions, modifier):
+    # needs to pass 6 parameters:
     # number of weeks, 
+    # number of normal days, 
     # actions during a normal day,
     # number of weekend days,
     # number of actions on weekend,
     # and then the modifier 
-    inputString = ctx.message.content[10:]
+    # inputString = ctx.message.content[10:]
     ## TODO
+    pass
 
 @bot.command()
 async def rollStats():
     # rolls 4d6, dropping the lowest number, six times to allow for D&D 5e character creation
     # TODO 
-    pass
+    statList = []
+    for i in range(0, 6):
+        rollList = []
+        stat = 0
+        for j in range(0, 4):
+            rollList.append(random.randint(1, 6)
+        rollList.pop(min(rollList))
+        for roll in rollList:
+            stat = stat + roll
+        statList.append(stat)
+    await ctx.send(statList)
+    
+            
+        
 
 bot.run(config.token)
