@@ -8,6 +8,8 @@ class dice:
     # exploding dice are when the highest number is rolled, dice is rerolled and added to sum
     shadowRunStyle = False # when true, will return number of 5s and 6s, or 'hits' instead of sum total. Used with Shadowrun
     fudgeDice = False # some systems use 'fudge' dice, such as fate. If true, will roll fudge dice
+    advantage = False # rolling with advantage means to roll twice and return the highest roll, used in D&D 5e
+    disadvantage = False # rolling with disadvantage means to roll twice and return the lowest roll, used in D&D 5e 
     toString = ' '
     # def __new__(dice, inpt : str): 
     #     return 
@@ -37,6 +39,12 @@ class dice:
         rollList.append('_**Final Total: ' + str(total) + '**_')
         self.toString = (', '.join(rollList))
         return self.toString
+    
+    def advantage_disadvantage(self):
+        #function to roll for advantage or disadvantage
+        rolls = []
+        return rolls
+
     def rollFudgeDice(self):
         # function to roll fudge dice
         rollList = []
@@ -105,6 +113,13 @@ class dice:
                     inpt.replace('-se', '')
                 if inpt.find('-es') is not -1:
                     inpt.replace('es','')
+        if inpt.find('-d') is not -1: 
+            self.disadvantage = True
+            inpt.replace('-d', '')
+        if inpt.find('a') is not -1:
+            self.disadvantage = True
+            inpt.replace('-a', '')
+
         if inpt.find('d') is not -1:
             numberOfDiceStr, sidesStr = inpt.split('d')
         else:
@@ -134,10 +149,11 @@ class dice:
             self.rollShadowRunDice()
         elif self.fudgeDice:
              self.rollFudgeDice()
+        elif self.advantage or self.disadvantage: 
+            self.advantage_disadvantage()
         else:
-            self.toString = self.rollDice() 
-        return self.toString
+            self.toString = self.rollDice()
+                return self.toString
         
     def __init__(self, inpt : str):
          self.in_string(inpt)
-         # return output
