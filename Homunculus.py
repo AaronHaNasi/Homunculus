@@ -9,7 +9,10 @@ import config
 import dice
 import hat
 ## TODO: Replace all appearances of ctx.messagen.contents
-## TODO: replace appearances of ctx.message.channel.send 
+## TODO: replace appearances of ctx.message.channel.send
+## TODO: add advantage rolls for dice
+## TODO: have rolls ping rollee
+## TODO: beautify bot responses in rolls 
 description = 'Homunculus Bot, advanced version'
 playlist = []
 
@@ -29,21 +32,6 @@ async def on_ready():
     print(bot.user.id)
     print('--------------------------------------')
 
-'''
-@bot.command(pass_context = True)
-async def Help(ctx, arg1):
-    if ctx.message.content == '!help':
-        ctx.message.channel.send('Hi! I am Homunculus! I have a couple of commands, all of which'
-            + 'are activated by the \'!\' prefix. Here is a list:' 
-            + '\n**help**: Gives information on commands'
-            + '\n**roll**: Rolls dice with a variety of options. Append -e for'
-            + 'exploding dice, -s for shadowrun style dice, and -se for both. I can also roll fudge dice!'
-            + '\n**join**: joins the voice chat you are currently for music playing purposes.'
-            + '\n**rollWeeks**: Automaticall roll magic school weeks.'
-            + '\n For more information about these commands, type !help [name of command]')
-    else:
-        ctx.message.channel.send(helpdict[arg1])
-'''
 @bot.command(pass_context = True, description='Roll x number of dice with y faces, using the \'X\'d\'Y\' format')
 async def roll(ctx, arg):
     # rolls = dice.dice(ctx.message.content[6:])
@@ -51,29 +39,6 @@ async def roll(ctx, arg):
     rolls = dice.dice(arg)
     await ctx.send(rolls.toString)
 
-'''@bot.command(pass_context = True)
-async def addQuote(ctx):
-    quotes = open('quotes.txt', 'r')
-    currentQuotes = quotes.read()
-    currentQuotes.close()
-    quotes = open('quotes.txt', 'w')
-    quote = ctx.message.content[10:]
-    quotes.write(currentQuotes + '\n' + quote)
-    quotes.write
-    quotes.close()
-    await bot.say("Quote added!")
-
-
-@bot.command()
-async def quote():
-    quoteList = []
-    iterator = 0
-    quotes = open('quotes.txt', 'r')
-    quoteList = quotes.read().split('\n')
-    quotes.close()
-    await bot.say(random.choice(quoteList))
-    quoteList.clear
-'''
 @bot.command(pass_context=True, no_pm=True, description='Joins user in current voice chat channel')
 async def join(ctx):
     channel = ctx.message.author.voice_channel
@@ -97,10 +62,6 @@ async def airhorn(ctx):
     player.start()
     #vc.disconnect()
 
-'''@bot.command(pass_context = True)
-async def test(ctx):
-    print(ctx.message.content)
-'''
 
 @bot.command()
 async def createPlayList(message : str):
@@ -134,44 +95,6 @@ async def fight():
 
 
 
-'''@bot.command(pass_context=True)
-async def addToHat(ctx):
-    hat.addItem(ctx.message.content[8:])
-    await bot.say("Item added!")
-'''    
-
-'''
-@bot.command(pass_context=True)
-async def removeFromHat(ctx):
-    response = hat.removeItem(ctx.message.content[13:])
-    await bot.say(response)
-
-@bot.command()
-async def pullFromHat(): 
-    response = hat.pullItem()
-    await bot.say(response)
-'''
-'''
-@bot.command(pass_context=True)
-@has_permissions(manage_roles=True)
-async def addRole(ctx):
-    roles = []
-    users = []
-    #strMessage = ctx.message.content
-    #roles = strMessage.split()
-    #[x for x in roles if not '@' or '!' in x]    
-     
-    #roles = ctx.message.
-    roles = ctx.message.role_mentions
-    users = ctx.message.mentions
-    print(roles)
-    print(users)
-    for role in roles:
-        print("adding role...")
-        for user in users:
-            await bot.add_roles(user, role)
-            #print("role added to " + user)
-'''
 @bot.command(pass_context=True, description='Function that rolls multiple weeks of actions in Magic School Roleplaying Game')
 async def rollWeeks(ctx, numberOfWeeks, normalDays, normalDayActions, numberOfWeekendDays, weekendActions, modifier):
     # needs to pass 6 parameters:
@@ -186,7 +109,7 @@ async def rollWeeks(ctx, numberOfWeeks, normalDays, normalDayActions, numberOfWe
     pass
 
 @bot.command()
-async def rollStats():
+async def rollStats(ctx):
     # rolls 4d6, dropping the lowest number, six times to allow for D&D 5e character creation
     # TODO 
     statList = []
@@ -194,14 +117,17 @@ async def rollStats():
         rollList = []
         stat = 0
         for j in range(0, 4):
-            rollList.append(random.randint(1, 6)
-        rollList.pop(min(rollList))
+            rollList.append(random.randint(1, 6))
+        rollList.remove(min(rollList))
         for roll in rollList:
             stat = stat + roll
         statList.append(stat)
     await ctx.send(statList)
     
-            
+@bot.listen()
+async def on_message(message): 
+    if 'your' in message.content and message.author.id != bot.user.id:
+        await message.channel.send("Hey you big fucking idiot, did you use the proper form of your/you're? I bet not you buffoon, you coward, you cretin you imbecile. Fuck you.")
         
 
 bot.run(config.token)
