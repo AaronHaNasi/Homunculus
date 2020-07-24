@@ -126,7 +126,7 @@ async def rollStats(ctx):
     
 @bot.listen()
 async def on_message(message): 
-    if 'your' in message.content and message.author.id != bot.user.id:
+    if 'your' in message.content.lower() and message.author.id != bot.user.id:
         await message.channel.send("Hey you big fucking idiot, did you use the proper form of your/you're? I bet not you buffoon, you coward, you cretin you imbecile. Fuck you.")
         
 
