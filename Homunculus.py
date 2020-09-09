@@ -126,8 +126,10 @@ async def rollStats(ctx):
     
 @bot.listen()
 async def on_message(message): 
-    if 'your' in message.content.lower() and message.author.id != bot.user.id:
+    if 'your' in message.content.lower() and message.author.id != bot.user.id and message.author.id == 162053281668005888:
         await message.channel.send("Hey you big fucking idiot, did you use the proper form of your/you're? I bet not you buffoon, you coward, you cretin you imbecile. Fuck you.")
-        
+    elif message.author.id == 301442653185376258 or message.author.id == 179382112653148162:
+        await message.add_reaction('\N{CRAB}')
+        await message.channel.send(file=discord.File('crab.jpg'))
 
 bot.run(config.token)
