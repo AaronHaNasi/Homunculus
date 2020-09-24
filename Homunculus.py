@@ -15,7 +15,6 @@ import hat
 ## TODO: beautify bot responses in rolls 
 description = 'Homunculus Bot, advanced version'
 playlist = []
-
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description=description)
 
 helpdict = {
@@ -129,7 +128,11 @@ async def on_message(message):
     if 'your' in message.content.lower() and message.author.id != bot.user.id and message.author.id == 162053281668005888:
         await message.channel.send("Hey you big fucking idiot, did you use the proper form of your/you're? I bet not you buffoon, you coward, you cretin you imbecile. Fuck you.")
     elif message.author.id == 301442653185376258 or message.author.id == 179382112653148162:
+        crab = random.randint(1,100)
+        if crab < 11:
+            await message.channel.send(file=discord.File('crab.jpg'))
         await message.add_reaction('\N{CRAB}')
+
         # await message.channel.send(file=discord.File('crab.jpg'))
 
 bot.run(config.token)
