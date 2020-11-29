@@ -153,7 +153,7 @@ class dice:
             self.advantage_disadvantage()
         else:
             self.toString = self.rollDice()
-                return self.toString
+            return self.toString
         
     def __init__(self, inpt : str):
          self.in_string(inpt)
